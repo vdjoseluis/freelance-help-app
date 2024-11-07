@@ -6,17 +6,24 @@ import cors from "cors";
 const app = express();
 const port = process.env.PORT || 3000;
 
-const allowedOrigins = ["https://freelance-help-app.vercel.app"];
 app.use(cors({
-  origin: allowedOrigins,
+  origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true
 }));
 
 app.use(express.json());
 
-app.post("/generate-invoice", generateInvoice);
-app.post("/help-filling-form130", helpFillingForm130);
+app.post("/generate-invoice", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://freelance-help-app.vercel.app");
+  generateInvoice(req, res);
+});
+
+app.post("/help-filling-form130", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://freelance-help-app.vercel.app");
+  helpFillingForm130(req, res);
+});
+
 
 app.listen(port, () => {
   console.log(`Servidor escuchando en puerto:${port}`);
