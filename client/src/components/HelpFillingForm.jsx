@@ -45,7 +45,7 @@ const HelpFillingForm = () => {
     setResult(resultData); 
 
     try {
-      const request = await fetch("http://localhost:3000/help-filling-form130", {
+      const request = await fetch("https://freelance-help-app.onrender.com/help-filling-form130", {
         method: "POST",
         body: JSON.stringify(resultData),
         headers: {

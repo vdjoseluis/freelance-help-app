@@ -38,7 +38,7 @@ const Invoice = () => {
     };
 
     try {
-      const request = await fetch("http://localhost:3000/generate-invoice", {
+      const request = await fetch("https://freelance-help-app.onrender.com/generate-invoice", {
         method: "POST",
         body: JSON.stringify(formattedData),
         headers: {
