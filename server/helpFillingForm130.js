@@ -13,7 +13,7 @@ const helpFillingForm130 = (req, res) => {
   if (!fs.existsSync(serverDir)) {
     fs.mkdirSync(serverDir);
   }
-  const pdfPath = path.join(serverDir, "form130_output.pdf");
+  const pdfPath = path.join(serverDir, "help_form130.pdf");
 
   const doc = new PDFDocument({ margin: 50 });
   const stream = createWriteStream(pdfPath);
@@ -68,7 +68,7 @@ const helpFillingForm130 = (req, res) => {
   // Dibujar cada fila de datos con bordes
   doc.font("Helvetica").fontSize(12);
   dataRows.forEach(([casilla, importe]) => {
-    const values = [casilla, importe.toFixed(2)];
+    const values = [casilla, (importe.toFixed(2)) + " €"];
 
     values.forEach((value, index) => {
       const x = startX + colWidths.slice(0, index).reduce((a, b) => a + b, 0);
@@ -90,7 +90,7 @@ const helpFillingForm130 = (req, res) => {
 
   // Descargar el PDF cuando esté listo
   stream.on("finish", () => {
-    res.download(pdfPath, "form130_output.pdf", (err) => {
+    res.download(pdfPath, "help_form130.pdf", (err) => {
       if (err) {
         console.error("Error al descargar el PDF:", err);
         res.status(500).send("Error al descargar el PDF");

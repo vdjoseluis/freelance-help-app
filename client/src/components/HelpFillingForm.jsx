@@ -22,7 +22,7 @@ const HelpFillingForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const income= parseFloat(formData.income);
     const expenses = parseFloat(formData.expenses);
@@ -35,13 +35,36 @@ const HelpFillingForm = () => {
     const calcBox02= (box02 + (expenses+(income-expenses)*0.05)).toFixed(2);
     const calcBox05= (box07 - box16).toFixed(2);
 
-    setResult({
-      ...result,
-      box01: calcBox01,
-      box02: calcBox02,
-      box05: calcBox05,
-      box13: formData.showAdditionalBoxes ? 0 : (100).toFixed(2),
-    })
+    const resultData = {
+      box01: parseFloat(calcBox01),
+      box02: parseFloat(calcBox02),
+      box05: parseFloat(calcBox05),
+      box13: formData.showAdditionalBoxes ? 0 : 100, 
+    };
+  
+    setResult(resultData); 
+
+    try {
+      const request = await fetch("http://localhost:3000/help-filling-form130", {
+        method: "POST",
+        body: JSON.stringify(resultData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (request.ok) {
+        const blob = await request.blob(); // Obtiene el archivo como un Blob
+        const link = document.createElement("a"); // Crea un enlace de descarga
+        link.href = URL.createObjectURL(blob); // Crea una URL para el Blob
+        link.download = "help_form130.pdf"; // Nombre del archivo que se descargará
+        link.click(); // Inicia la descarga
+        navigate("/");
+      } else {
+        throw new Error("Error al generar la factura");
+      }
+    } catch (error) {
+      console.log("Error al generar la factura- ",error);      
+    }
   };
 
   const handleOptionTrimester = (e) => {

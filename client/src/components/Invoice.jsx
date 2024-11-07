@@ -22,15 +22,42 @@ const Invoice = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;  
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    const formattedData = {
+      ...formData,
+      amount: parseFloat(formData.amount),
+    };
+
+    try {
+      const request = await fetch("http://localhost:3000/generate-invoice", {
+        method: "POST",
+        body: JSON.stringify(formattedData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (request.ok) {
+        const blob = await request.blob(); // Obtiene el archivo como un Blob
+        const link = document.createElement("a"); // Crea un enlace de descarga
+        link.href = URL.createObjectURL(blob); // Crea una URL para el Blob
+        link.download = "invoice.pdf"; // Nombre del archivo que se descargará
+        link.click(); // Inicia la descarga
+        navigate("/");
+      } else {
+        throw new Error("Error al generar la factura");
+      }
+    } catch (error) {
+      console.log("Error al generar la factura ", error);
+    }
   };
 
   const handleCancel = () => {

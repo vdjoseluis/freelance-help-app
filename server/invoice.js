@@ -21,7 +21,7 @@ const generateInvoice = (req, res) => {
     personalPhone,
     personalEmail,
     customerName,
-    customerCif,
+    customerNif,
     customerAddress,
     customerPhone,
     customerEmail,
@@ -33,7 +33,7 @@ const generateInvoice = (req, res) => {
   if (!fs.existsSync(serverDir)) {
     fs.mkdirSync(serverDir);
   }
-  const pdfPath = path.join(serverDir, "output_invoice.pdf");
+  const pdfPath = path.join(serverDir, "invoice.pdf");
 
   const doc = new PDFDocument({ margin: 50 });
   const stream = createWriteStream(pdfPath);
@@ -50,7 +50,10 @@ const generateInvoice = (req, res) => {
   currentY += 30;
 
   // Información de la empresa y del cliente
-  doc.fontSize(14).font("Helvetica-Bold").text(`${personalName}`, startX, currentY);
+  doc
+    .fontSize(14)
+    .font("Helvetica-Bold")
+    .text(`${personalName}`, startX, currentY);
   doc.fontSize(12).font("Helvetica");
   doc.text(`Factura Nº: ${numInvoice}`, startX + colWidths[0], currentY);
   currentY += 20;
@@ -71,7 +74,7 @@ const generateInvoice = (req, res) => {
   currentY += 20;
   doc.font("Helvetica");
 
-  doc.text(`NIF/CIF: ${customerCif}`, startX, currentY);
+  doc.text(`NIF/CIF: ${customerNif}`, startX, currentY);
   currentY += 20;
   doc.text(`${customerAddress}`, startX, currentY);
   currentY += 20;
@@ -159,7 +162,7 @@ const generateInvoice = (req, res) => {
   doc.end();
 
   stream.on("finish", () => {
-    res.download(pdfPath, "output_invoice.pdf", (err) => {
+    res.download(pdfPath, "invoice.pdf", (err) => {
       if (err) {
         console.error("Error al descargar el PDF:", err);
         res.status(500).send("Error al descargar el PDF");
