@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 const allowedOrigins = ["https://freelance-help-app.vercel.app/"];
 app.use(cors({
   origin: allowedOrigins,
-  methods: "POST",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true
 }));
 
