@@ -6,23 +6,11 @@ import cors from "cors";
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: "*",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true
-}));
-
+app.use(cors());
 app.use(express.json());
 
-app.post("/generate-invoice", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://freelance-help-app.vercel.app");
-  generateInvoice(req, res);
-});
-
-app.post("/help-filling-form130", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://freelance-help-app.vercel.app");
-  helpFillingForm130(req, res);
-});
+app.post("/generate-invoice", generateInvoice);
+app.post("/help-filling-form130", helpFillingForm130);
 
 
 app.listen(port, () => {
